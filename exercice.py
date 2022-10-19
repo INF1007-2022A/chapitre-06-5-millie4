@@ -1,18 +1,45 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 def check_brackets(text, brackets):
-	return False
+	pile =[]
+	result = True
+	for n in text:
+		if n in brackets:
+			if brackets.index(n)%2 == 0: pile.append(n) # n pair donc ouverture
+			elif brackets.index(n)%2 != 0: # n impair donc fermeture
+				if pile[-1] == brackets[brackets.index(n)-1]: pile.pop(-1)
+				else: result = False
+	if pile != []: result = False
+	return result
 
 def remove_comments(full_text, comment_start, comment_end):
-	return ""
+	if comment_start not in full_text and comment_end not in full_text:
+		return full_text
+	elif comment_start in full_text and comment_end in full_text:
+		start = full_text.index(comment_start)
+		end = full_text.index(comment_end) + len(comment_end)
+		return full_text[:start] + full_text[end:]
+	else: return None
 
 def get_tag_prefix(text, opening_tags, closing_tags):
-	return (None, None)
+	for n in range(len(opening_tags)):
+		if opening_tags[n] in text: 
+			if text.index(opening_tags[n]) == 0: return(opening_tags[n],None)
+	for n in range(len(closing_tags)):
+		if closing_tags[n] in text: 
+			if text.index(closing_tags[n]) == 0: return(None,closing_tags[n])
+	return(None, None)
+	
+	
 
-def check_tags(full_text, tag_names, comment_tags):
-	return False
+def check_tags(full_text, tag_names, comment_tags): ### ABANDONNÉ À REFAIRE
+	coorect = True
+	for n in tag_names:
+		if "<"+n+">" in full_text:
+			if "</"+n+">" in full_text and full_text.index("</"+n+">") > full_text.index("<"+n+">"): correct = True
+			else: correct = False
+	return correct
 
 
 if __name__ == "__main__":
